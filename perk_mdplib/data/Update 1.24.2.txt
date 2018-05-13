@@ -1,0 +1,8 @@
+Update [1.24.2]
+
+-Changed another time the name of the package, to 'perks'.
+-Fixed a bug in the Task Class, in the static method 'login'
+
+-- END UPDATE [1.24.2] --
+
+Software under GNU License. Developed by MarcoDellaPutta(c). All rights reserved.

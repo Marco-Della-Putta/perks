@@ -1,0 +1,8 @@
+Update [1.23.9]
+
+-Bug fixed during the installation by the 'pip install' command.
+-Changed the name of the package from 'perk' to 'perk_mdplib'
+
+-- END UPDATE [1.23.9]
+
+Software under GNU License. Developed by MarcoDellaPutta(c). All rights reserved.
