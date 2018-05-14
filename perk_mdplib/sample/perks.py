@@ -33,6 +33,7 @@ def SETUP():
 
 import threading
 from contextlib import contextmanager
+import sqlite3 as sql
 
 class Expression():
     """
@@ -962,7 +963,7 @@ class Task(threading.Thread):
         return _message
 
 
-########[CONTEXT-MANAGER]################# FILE WRAPPER ########### Over:Task Under:System
+########[CONTEXT-MANAGER]################# FILE WRAPPER ########### Over:Task Under:SQL
         
 class FileWrapper:
     """
@@ -1013,7 +1014,185 @@ class FileWrapper:
             if file_:
                 file_.close()
 
-################################################ SYSTEM CLASS #################################### Over:Task | Under:End
+                
+################################################## SQL CLASS################## Over:FileWrapper Under:System
+
+class SQL:
+    """
+    An SQL Database Manager.
+    """
+
+    def __init__(self, name):
+
+        if not name.endswith('.db'):
+            raise ValueError("The name of a DataBase must ends with '.db'")
+
+        self.database = sql.connect(name)
+        self.cursor = self.database.cursor()
+        self.name = ''
+        self.length = 0
+        self.args = []
+        self.argm = 0
+        self.unique = False
+
+    def add_table(self, name, *args, __unique=False):
+
+        if not isinstance(name, str):
+            raise ValueError("Error. The name of the table must be a string. Parameters must be tuples.")
+
+        self.unique = __unique
+        self.name = name
+        self.length = len(args)
+
+        if self.unique:
+            cmd = f"""
+                  CREATE TABLE IF NOT EXISTS {self.name} (
+                  TableID INTEGER PRIMARY KEY,           
+                  """
+        else:
+            cmd = f"""
+                  CREATE TABLE IF NOT EXISTS {self.name} (
+                  """
+
+        for pos, _arg in enumerate(args):
+
+            try:
+                if not isinstance(_arg, str):
+                    raise ValueError("Name of the columns must be strings.")
+
+                if pos == (self.length - 1):
+                    cmd += _arg
+
+                else:
+                    cmd += (_arg + ",\n                  ")
+
+            except:
+                raise ValueError("Invalid argument or Syntax")
+
+            finally:
+                self.args.append(_arg)
+
+        cmd += ");"
+
+        self.cursor.execute(cmd)
+
+        _result = [self.name]
+        _result.extend(self.args)
+
+        self.database.commit()
+
+        return _result
+
+    def add_argm(self, *args):
+
+        if self.unique:
+            try:
+                count = list(self.cursor.fetchall())[self.argm][0]
+
+            except:
+                count = 0
+
+        if len(args) != self.length:
+            raise ValueError(f"There are {self.length} columns, you inserted {len(args)} values.")
+
+        _result = []
+
+        if self.unique:
+            cmd = f"INSERT INTO {self.name} VALUES({count+1},"
+
+        else:
+            cmd = f"INSERT INTO {self.name} VALUES("
+
+        for pos,_arg in enumerate(args):
+
+            try:
+                if pos == (self.length - 1):
+                    if isinstance(_arg, str):
+                        cmd += f"'{_arg}'"
+
+                    else:
+                        cmd += str(_arg)
+
+                else:
+                    if isinstance(_arg, str):
+                        cmd += f"'{_arg}',"
+
+                    else:
+                        cmd += f"{str(_arg)},"
+
+            except:
+                raise ValueError("Values must be the same of the previous insertion.")
+
+            finally:
+                _result.append(_arg)
+
+        cmd += ")"
+
+        self.cursor.execute(cmd)
+        self.database.commit()
+        self.argm += 1
+
+        return _result
+
+    def fetchall(self):
+
+        self.cursor.execute(f"SELECT * FROM {self.name}")
+        return str(self.cursor.fetchall())
+
+    def close(self):
+
+        try:
+            self.cursor.close()
+            self.database.close()
+            return True
+
+        except:
+            return False
+
+    def fetchone(self):
+
+        return str(self.cursor.fetchone())
+
+    def fetchmany(self, size):
+
+        return str(self.cursor.fetchmany(size))
+
+    def execute(self, string):
+
+        val = self.cursor.execute(string)
+        return val
+
+    def commit(self):
+
+        self.database.commit()
+        return None
+
+    def delete(self):
+        import os
+
+        try:
+            os.unlink(self.name)
+            return True
+        except:
+
+            try:
+                os.remove(self.name)
+                return True
+
+            except PermissionError:
+                raise PermissionError("Can not delete the database, permission error")
+
+            except FileNotFoundError:
+                raise FileNotFoundError(f"Can not delete the database, database not found in '{self.name}'")
+
+            except:
+                raise BaseException(rf"""Can not delete the database. Database located in :
+                                       - {os.getcwd()}\{self.name}
+                                       or
+                                       - {self.name}
+                                       """)
+
+################################################ SYSTEM CLASS #################################### Over:SQL | Under:End
 
 class System:
     """
