@@ -1,0 +1,7 @@
+Update [1.24.5]
+
+SQL Class : Bug fixed, added self variable (self.path) for the '.delete()' method.
+SQL Class : The name of the table must be report in the method, as an argument.
+SQL Class : Added (class_name, show_database, check_unique, show_args, show_tab, get_curs, get_db) methods.
+
+-- END UPDATE [1.24.5] --

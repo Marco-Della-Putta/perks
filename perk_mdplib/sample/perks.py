@@ -1022,11 +1022,14 @@ class SQL:
     An SQL Database Manager.
     """
 
+    DEVELOPER = "Marco Della Putta"
+
     def __init__(self, name):
 
         if not name.endswith('.db'):
             raise ValueError("The name of a DataBase must ends with '.db'")
 
+        self.path = name
         self.database = sql.connect(name)
         self.cursor = self.database.cursor()
         self.name = ''
@@ -1034,12 +1037,18 @@ class SQL:
         self.args = []
         self.argm = 0
         self.unique = False
+        self.tabs = []
+
+    @classmethod
+    def class_name(cls):
+        return cls.__name__
 
     def add_table(self, name, *args, __unique=False):
 
         if not isinstance(name, str):
             raise ValueError("Error. The name of the table must be a string. Parameters must be tuples.")
 
+        self.tabs.append(str(name))
         self.unique = __unique
         self.name = name
         self.length = len(args)
@@ -1083,7 +1092,39 @@ class SQL:
 
         return _result
 
-    def add_argm(self, *args):
+    def show_tab():
+        try:
+            return str(self.tables)
+        
+        except:
+            raise ValueError
+
+    def show_args():
+        try:
+            return str(self.args)
+        
+        except:
+            raise ValueError
+
+    def show_database():
+        try:
+            return str(self.path)
+
+        except:
+            raise ValueError
+
+    def check_unique():
+        return self.unique
+
+    def get_curs():
+        return self.cursor
+
+    def get_db():
+        return self.db
+
+    def add_argm(self, table, *args):
+
+        self.name = str(table)
 
         if self.unique:
             try:
@@ -1134,12 +1175,22 @@ class SQL:
 
         return _result
 
-    def fetchall(self):
+    def drop(self, table):
 
-        self.cursor.execute(f"SELECT * FROM {self.name}")
-        return str(self.cursor.fetchall())
+        self.cursor.execute(f"DROP TABLE IF EXISTS {self.name}")
+        return str(self.name)
 
-    def close(self):
+    def fetchall(self, table):
+
+        self.name = table
+        try:
+            self.cursor.execute(f"SELECT * FROM {self.name}")
+            return str(self.cursor.fetchall())
+        
+        except:
+            raise ValueError("Invalid table name.")
+
+    def close(self, table):
 
         try:
             self.cursor.close()
@@ -1149,16 +1200,28 @@ class SQL:
         except:
             return False
 
-    def fetchone(self):
+    def fetchone(self, table):
 
-        return str(self.cursor.fetchone())
+        self.name = table
+        try:
+            self.cursor.execute(f"SELECT * FROM {self.name}")
+            return str(self.cursor.fetchone())
+        
+        except:
+            raise ValueError("Invalid table name.")
 
-    def fetchmany(self, size):
+    def fetchmany(self, table, size):
 
-        return str(self.cursor.fetchmany(size))
+        self.name = table
+        try:
+            self.cursor.execute(f"SELECT * FROM {self.name}")
+            return str(self.cursor.fetchmany(size))
+        
+        except:
+            raise ValueError("Invalid table name.")
 
     def execute(self, string):
-
+       
         val = self.cursor.execute(string)
         return val
 
@@ -1171,12 +1234,12 @@ class SQL:
         import os
 
         try:
-            os.unlink(self.name)
+            os.unlink(self.path)
             return True
         except:
 
             try:
-                os.remove(self.name)
+                os.remove(self.path)
                 return True
 
             except PermissionError:
@@ -1187,9 +1250,9 @@ class SQL:
 
             except:
                 raise BaseException(rf"""Can not delete the database. Database located in :
-                                       - {os.getcwd()}\{self.name}
+                                       - {os.getcwd()}\{self.path}
                                        or
-                                       - {self.name}
+                                       - {self.path}
                                        """)
 
 ################################################ SYSTEM CLASS #################################### Over:SQL | Under:End
