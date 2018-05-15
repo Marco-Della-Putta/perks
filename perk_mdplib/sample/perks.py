@@ -1092,35 +1092,45 @@ class SQL:
 
         return _result
 
-    def show_tab():
+    def show_tab(self):
         try:
             return str(self.tables)
         
         except:
             raise ValueError
 
-    def show_args():
+    def show_args(self):
         try:
             return str(self.args)
         
         except:
             raise ValueError
 
-    def show_database():
+    def show_database(self):
         try:
             return str(self.path)
 
         except:
             raise ValueError
 
-    def check_unique():
+    def check_unique(self):
         return self.unique
 
-    def get_curs():
+    def get_curs(self):
         return self.cursor
 
-    def get_db():
+    def get_db(self):
         return self.db
+
+    def try_visual(self, table):
+        
+        print(f"\n     ### -{table}- TABLE ###\n\n")
+        tup = self.fetchall(table, tuples=True)
+        
+        for _val in tup:
+            print(_val)
+            
+        return None
 
     def add_argm(self, table, *args):
 
@@ -1180,17 +1190,29 @@ class SQL:
         self.cursor.execute(f"DROP TABLE IF EXISTS {self.name}")
         return str(self.name)
 
-    def fetchall(self, table):
+    def fetchall(self, table, tuples=False):
 
         self.name = table
-        try:
-            self.cursor.execute(f"SELECT * FROM {self.name}")
-            return str(self.cursor.fetchall())
-        
-        except:
-            raise ValueError("Invalid table name.")
 
-    def close(self, table):
+        if not tuples:
+            
+            try:
+                self.cursor.execute(f"SELECT * FROM {self.name}")
+                return str(self.cursor.fetchall())
+            
+            except:
+                raise ValueError("Invalid table name.")
+        else:
+
+            try:
+                self.cursor.execute(f"SELECT * FROM {self.name}")
+                return tuple(self.cursor.fetchall())
+
+            except:
+                raise ValueError("Invalid table name.") 
+            
+
+    def close(self):
 
         try:
             self.cursor.close()
@@ -1232,6 +1254,12 @@ class SQL:
 
     def delete(self):
         import os
+
+        try:
+            self.cursor.close()
+            self.database.close()
+        except:
+            pass
 
         try:
             os.unlink(self.path)

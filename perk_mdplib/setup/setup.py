@@ -13,7 +13,7 @@ Good Luck!
 """
 
 setup(name='perks',
-      version='1.24.5',
+      version='1.24.6',
       author='Marco Della Putta',
       author_email='marcodp183@gmail.com',
       url='https://grigoprg.webnode.it',
