@@ -372,13 +372,13 @@ class Shell(object):
                 SPACE = False
 
             elif re.fullmatch(create, command.lower()):
-                result = re.fullmatch(create, command.lower())
+                result = re.fullmatch(create, command)
                 print("creating file ...")
                 result = "C:\\" + result.group(1)
                 System.fCreate(write=False, path=result.group(1))
 
             elif re.fullmatch(read, command.lower()):
-                result = re.fullmatch(read, command.lower())
+                result = re.fullmatch(read)
                 print("reading file ...\n")
                 result = "C:\\" + result.group(1)
                 path = result
@@ -388,75 +388,75 @@ class Shell(object):
                     print(x)
                     
             elif re.fullmatch(openweb, command.lower()):
-                result = re.fullmatch(openweb, command.lower())
+                result = re.fullmatch(openweb)
                 __websearch__(result.group(1))
 
             elif re.fullmatch(createdw, command.lower()):
-                result = re.fullmatch(createdw, command.lower())
+                result = re.fullmatch(createdw)
                 print("creating file overwriting other file ...")
                 System.fCreate(write=True, path=result.group(1))
 
             elif re.fullmatch(created, command.lower()):
-                result = re.fullmatch(created, command.lower())
+                result = re.fullmatch(created)
                 print("creating file ...")
                 System.fCreate(write=False, path=result.group(1))
 
             elif re.fullmatch(readd, command.lower()):
-                result = re.fullmatch(readd, command.lower())
+                result = re.fullmatch(readd)
                 with open(result.group(1), "r") as f:
                     result = f.readlines()
                 for x in result:
                     print(x)
 
             elif re.fullmatch(memory, command.lower()):
-                result = re.fullmatch(memory, command.lower())
+                result = re.fullmatch(memory)
                 print("analyzing memory ...")
                 x = System.Memory(result.group(1))
                 for y in x:
                     print(y)
 
             elif re.fullmatch(filesearch, command.lower()):
-                result = re.fullmatch(filesearch, command.lower())
+                result = re.fullmatch(filesearch)
                 print("searching file ...")
                 x = System.Filesearch(result.group(1))
                 for y in x:
                     print(y)
 
             elif re.fullmatch(filedel, command.lower()):
-                result = re.fullmatch(filedel, command.lower())
+                result = re.fullmatch(filedel)
                 print("deleting file ...")
                 x = System.FileDelete(result.group(1))
                 for y in x:
                     print(y)
 
             elif re.fullmatch(extdel, command.lower()):
-                result = re.fullmatch(extdel, command.lower())
+                result = re.fullmatch(extdel)
                 print("deleting extension ...")
                 x = System.Extdelete(result.group(1))
                 for y in x:
                     print(y)
 
             elif re.fullmatch(extsearch, command.lower()):
-                result = re.fullmatch(extsearch, command.lower())
+                result = re.fullmatch(extsearch)
                 print("searching extension ...")
                 x = System.Extsearch(result.group(1))
                 for y in x:
                     print(y)
 
             elif re.fullmatch(createdd, command.lower()):
-                result = re.fullmatch(createdd, command.lower())
+                result = re.fullmatch(createdd)
                 print("creating file on the desktop ...")
                 result = "C:\\Users\\Marco\\Desktop\\" + result.group(1)
                 System.fCreate(write=False, path=result)
 
             elif re.fullmatch(createwdd, command.lower()):
-                result = re.fullmatch(createwdd, command.lower())
+                result = re.fullmatch(createwdd)
                 print("creating and overwriting file on the desktop ...")
                 result = "C:\\Users\\Marco\\Desktop\\" + result.group(1)
                 System.fCreate(write=True, path=result)
 
             elif re.fullmatch(readdd, command.lower()):
-                result = re.fullmatch(readdd, command.lower())
+                result = re.fullmatch(readdd)
                 print("reading file ...\n")
                 result = str("C:\\Users\\Desktop\\" + result.group(1))
                 with open(result, "r") as f:
@@ -465,7 +465,7 @@ class Shell(object):
                     print(x)
 
             elif re.fullmatch(partialsearch, command.lower()):
-                result = re.fullmatch(partialsearch, command.lower())
+                result = re.fullmatch(partialsearch)
                 print("searching partial file ...")
                 x = System.PartSearch(result.group(1))
                 for y in x:
@@ -919,6 +919,66 @@ class Task(threading.Thread):
                     os.remove(file_source)
             except:
                 pass
+
+    @staticmethod
+    def Server_TCP(port, func, address='', _backlog=3, buffer=4096):
+        import socket
+        
+        if _backlog == 0 or _backlog > 500:
+            return False
+
+        while True:
+            
+            try:
+                s = socket.socket()
+                s.bind((address,port))
+                s.listen(_backlog)
+                
+            except socket.error as sk_error:
+                Task.Server_TCP(address, (_backlog-1))
+
+            connection, client_address = s.accept()
+
+            try:
+                try:
+                    _queue = connection.recv(buffer).decode()
+                    res = func(str(_queue))
+                    
+                    res = str(res)
+                    res = res.encode()
+                    
+                    connection.send(res)
+                    connection.close()
+                except:
+                    connection.send('Flag Error : Server-Failed-Queue'.encode())
+                    connection.close()
+                    
+            except:
+                pass
+
+        s.close()
+        return True
+
+    @staticmethod
+    def Client_Queue(address, command, buffer=4096):
+        import socket
+        
+        try:
+            s = socket.socket()
+            s.connect(address)
+        except socket.error as sk_error:
+            return False
+
+        try:
+            command = str(command)
+            command = command.encode()
+            s.send(command)
+            data = s.recv(buffer)
+            s.close()
+            return data.decode()
+            
+        except socket.error as sk_error:
+            raise sk_error    
              
     @staticmethod
     def Link(func_one, func_two, delay, args1 = [], args2 = []):

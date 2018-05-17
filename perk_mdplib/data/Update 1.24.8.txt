@@ -1,0 +1,10 @@
+Update [1.24.8]
+
+Added two @staticmethod to Task Class:
+
+- Server_TCP(port, function, address,_backlog, buffer)
+- Client_Queue(address, command, buffer)
+
+Contact me for details.
+
+-- END UPDATE [1.24.8] --
