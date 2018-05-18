@@ -1,0 +1,6 @@
+Update [1.24.9]
+
+- Added a decorator [@Server] to the Task Class.
+- Contact me for Details
+
+-- END UPDATE [1.24.9] --

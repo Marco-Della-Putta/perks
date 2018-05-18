@@ -921,6 +921,32 @@ class Task(threading.Thread):
                 pass
 
     @staticmethod
+    def Server(func):     
+        """
+        Port -> One   : 15000
+                Two   : 15897
+                Three : 43201
+                Four  : 32798
+        """
+        def wrap():
+            try:
+                Task.Server_TCP(15000, func)
+                return True
+            except:    
+                try:
+                    Task.Server_TCP(15897, func)
+                except:
+                    try:
+                        Task.Server_TCP(43201, func)
+                    except:
+                        try:
+                            Task.Server_TCP(32798, func)
+                        except:
+                            return False
+        return wrap
+
+
+    @staticmethod
     def Server_TCP(port, func, address='', _backlog=3, buffer=4096):
         import socket
         
@@ -1264,9 +1290,6 @@ class SQL:
 
             except:
                 count = 0
-
-        if len(args) != self.length:
-            raise ValueError(f"There are {self.length} columns, you inserted {len(args)} values.")
 
         _result = []
 
