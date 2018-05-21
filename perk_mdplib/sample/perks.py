@@ -15,7 +15,7 @@ if __name__ == "__main__":
     _notreal_ = 2
     __MainLibrary__ = "STX_LIB"
 
-built_on_package = ["pyautogui", "shutil", "pynput"]
+built_on_package = ["pyautogui", "shutil", "pynput", "screeninfo"]
 
 def SETUP():
     for _package_ in built_on_package:
@@ -774,23 +774,47 @@ class Default(object):
             return None
 
     @staticmethod
+    def os_info():
+        import sys
+        from win32api import GetSystemMetrics
+        
+        return sys.platform, sys.version, GetSystemMetrics(0), GetSystemMetrics(1), sys.getrecursionlimit(), sys.byteorder
+
+    @staticmethod
     def self_position():
         return str(__file__)
 
     @staticmethod
     @contextmanager
-    def desk(desktop=r'C:\Users\Marco\Desktop'):
+    def desk(desktop):
         try:
             import os
             cwd = os.getcwd()
             os.chdir(desktop)
             yield
         except:
-            raise WindowsError("Directory {desktop} not found.\nPut a valid path.")
+            raise WindowsError(f"Directory {desktop} not found.\nPut a valid path.")
         
         finally:
             os.chdir(cwd)
 
+    @staticmethod
+    @contextmanager
+    def stdout(file):
+        try:
+            fh = open(file, 'a')
+            import sys
+            current_output = sys.stdout
+            sys.stdout = fh
+            yield
+        except:
+            raise WindowsError(f'Directory {file} not found.\nPut a valid path.')
+        
+        finally:
+            if fh:
+                fh.close()
+            sys.stdout = current_output
+            
     @staticmethod
     def PrecTime(sec, microseconds=None, string=False):
         """
