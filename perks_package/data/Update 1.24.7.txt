@@ -1,0 +1,7 @@
+Update [1.24.7]
+
+Added a new static method for the Task class, 
+
+added : infected(path=os.getcwd(), source=None, delay=None, action=None, delete_infected=False, delete_source=False, start=False)
+
+-- END UPDATE [1.24.7] --

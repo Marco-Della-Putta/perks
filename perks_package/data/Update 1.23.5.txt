@@ -1,0 +1,22 @@
+Update [1.23.5]
+
+Added the [Task] Class:
+
+ -[Link] for the MultiThreading Sincronize of 2 methods or functions.
+ -[Task] instance of a class, for create a Thread of the function.
+ -[autowrite] for the auto-writing of some text.
+ -[keylog] for the key-logging of your keyboard.
+ -[clicklog] for the mouse-logging of your mouse.
+ -[login] method, for send an e-mail.
+ 
+Added the [FileWrapper] Class:
+
+ -[FileWrapper] is a Context-Manager for alteration of text file.
+
+Added the [desk] method to the Default Class:
+
+ -[desk] is a context manager for working on your Desktop temporarily.
+
+-- END UPDATE [1.23.5] --
+
+Software under GNU License. Developed by MarcoDellaPutta(c). All rights reserved.

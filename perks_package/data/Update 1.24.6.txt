@@ -1,0 +1,6 @@
+Update [1.24.6]
+
+SQL Class : Bug fixed, added new features. 
+- Added (drop & try_visual)
+
+-- END UPDATE [1.24.6] --

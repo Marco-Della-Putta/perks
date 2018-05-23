@@ -1,0 +1,6 @@
+Update [1.25.0]
+
+Added os_info() and stdout() to the [Default] class.
+Bug fixed in 'desk' method.
+
+-- END UPDATE [1.25.0] --

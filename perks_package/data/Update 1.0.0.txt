@@ -1,0 +1,24 @@
+Update [1.0.0]
+
+CLASS EXPRESSION.
+
+Linear(self, coeffx[], coeffy[], term) # Linear System Solving with numeric coeff.
+expression2(self, coeffxx, coeffx, term) # 2^ Expression Solving with numeric coeff. -- Return None if DELTA negative.
+delta(self, coeffxx, coeffx, term) # Calculate the DELTA.
+
+OVERLOAD OF :
+
+- sqrt(self, num1, num2)
+- pow(self, num1, num2)
+- add(self, num1, num2)
+- sub(self, num1, num2)
+- mul(self, num1, num2)
+- div(self, num1, num2)
+- mod(self, num1, num2)
+- floor(self, num1, num2)
+
+... WITH MORE PRECISION -Using always float, math.OPERATION, numpy.ARRAY.
+
+-- END UPDATE [1.23.5] --
+
+Software under GNU License. Developed by MarcoDellaPutta(c). All rights reserved.
