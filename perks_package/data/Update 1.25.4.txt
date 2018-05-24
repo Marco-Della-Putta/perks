@@ -1,0 +1,6 @@
+Update [1.25.4]
+
+Added a module named 'connection' under 'task' sub-package.
+'Server, Server_TCP, Client_Queue' moved to 'connection'.
+
+-- END UPDATE [1.25.4] --
