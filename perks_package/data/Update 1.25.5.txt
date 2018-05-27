@@ -1,0 +1,7 @@
+Update [1.25.5]
+
+Added 'Hack' class, in the 'hacking' module, in the 'task' package.
+'Infect', 'keylog' and 'clicklog' methods moved to the Hack class.
+'Local_Backdoor' and 'Remote_Server' added to the Hack class.
+
+-- END UPDATE [1.25.5] --
