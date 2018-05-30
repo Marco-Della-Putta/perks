@@ -22,8 +22,8 @@ class Shell(object):
         # Importing modules
         import re
         from webbrowser import open as __websearch__
-        from mlib.default.win import Default
-        from mlib.system.scanner import System
+        from perks.default.win import Default
+        from perks.system.scanner import System
 
         # Initalize the Shell
         command = ""

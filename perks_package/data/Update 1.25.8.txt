@@ -1,0 +1,6 @@
+Update [1.25.8]
+
+Added .pypirc file for the upload with twine of the package.
+Important bug fixed in 'Shell' class.
+
+-- END UPDATE [1.25.8] --
