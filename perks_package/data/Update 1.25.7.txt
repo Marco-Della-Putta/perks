@@ -1,0 +1,9 @@
+Update [1.25.7]
+
+Bug fixed.
+Added new features to the 'connection' and 'hacking' class.
+Name of some method changed:
+ -- Stable_Server => Exclusive_Server
+ -- Stable_Client => Connect
+
+-- END UPLOAD [1.25.7] --

@@ -13,7 +13,7 @@ Good Luck!
 """
 
 setup(name='perks',
-      version='1.25.6',
+      version='1.25.7',
       author='Marco Della Putta',
       author_email='marcodp183@gmail.com',
       url='https://github.com/Marco-Della-Putta/perks',

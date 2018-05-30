@@ -105,9 +105,9 @@ class Connection():
     def Server(cls, funct):     
         """
         Port -> One   : 15000
-                Two   : 15897
-                Three : 43201
-                Four  : 32798
+                Two   : 15600
+                Three : 36000
+                Four  : 41000
         """
         def wrap():
             try:
@@ -115,47 +115,120 @@ class Connection():
                 return True
             except:    
                 try:
-                    cls.Stable_Server(15897, func=funct)
+                    cls.Stable_Server(16000, func=funct)
                 except:
                     try:
-                        cls.Stable_Server(43201, func=funct)
+                        cls.Stable_Server(36000, func=funct)
                     except:
                         try:
-                            cls.Stable_Server(32798, func=funct)
+                            cls.Stable_Server(41000, func=funct)
                         except:
                             return False
         return wrap
 
     @classmethod
-    def Server_RESPONSE_NULL(data):
+    def Stable_Server(cls, port, func=None, address='', backlog=3, buffer=4096, listener=1, stop_keyword='Server --kill'):
+
+        if backlog == 0 or backlog > 200:
+            return False
+
+        try:
+            NO_USE = subprocess.run('chcp 65001', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            
+        except:
+            pass
+
+        _LISTENER = int(listener)
+        _BUFFER = int(buffer)
+        _BACKLOG = int(backlog)
+        _HOST = str(address)
+        _FUNC = func
+        _PORT = int(port)
+
+        try:
+            socket_server = socket()
+            socket_server.bind((_HOST,_PORT))
+            socket_server.listen(_LISTENER)
+
+        except error as sk_error:
+            cls.Stable_Server(_PORT, backlog=(_BACKLOG-1))
+
+        try:
+            while True:
+                CONNECTION, (client_IP, client_PORT) = socket_server.accept()
+
+                try:
+                    
+                    while True:
+                        try:
+
+                            _recieveData = CONNECTION.recv(_BUFFER).decode()
+                            
+                            if _recieveData.lower() == stop_keyword:
+                                return None
+
+                            if func:
+                                response = _FUNC(str(_recieveData))
+                            else:
+                                response = cls.Server_RESPONSE_NULL(str(_recieveData))
+
+                            response = str(response)
+                            response = response.encode()
+                          
+                            CONNECTION.send(response)
+                        except:
+                        
+                            CONNECTION.send('Flag Error :: Server-Failed-Queue'.encode())
+                except:
+                    pass
+                                
+                finally:
+                    CONNECTION.close()
+
+        finally:
+        
+            socket_server.close()
+            return None
+
+    @classmethod
+    def Server_RESPONSE_NULL(cls, data):
         return data
 
     @classmethod
-    def Stable_Client(cls, host, port, buffer=4096):
+    def Connect(cls, host, port, buffer=4096, stop_keyword='Client --kill'):
         try:
-            NO_RES = subprocess.run("chcp 65001", shell=True, stdout=subprocess.PIPE)
+            NO_RES = subprocess.run("chcp 65001", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         except:
              pass
 
         _HOST = host
         _PORT = port
+        _BUFFER = buffer
 
         socket_backdoor = socket()
-        socket_backdoor.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         socket_backdoor.connect((_HOST, _PORT))
 
-        while True:
-            command = input('>>>')
-            socket_backdoor.send(command.encode())
+        try:
 
-            data = socket_backdoor.recv(buffer).decode()
-            print(data)
+            while True:
+                command = input('>>>')
 
-        socket_backdoor.close()
-        return None
+                if command.lower() == stop_keyword:
+                    break
+                
+                socket_backdoor.send(command.encode())
+
+                data = socket_backdoor.recv(_BUFFER).decode()
+                print(data)
+            return None
+        
+        finally:
+            socket_backdoor.close()
+            return None
+            
 
     @classmethod
-    def Stable_Server(cls, port, func=None, address='', _backlog=3, buffer=4096, listener=1):
+    def Exclusive_Server(cls, port, func=None, address='', _backlog=3, buffer=4096, listener=1):
 
         if _backlog == 0 or _backlog > 200:
             return False
@@ -170,30 +243,35 @@ class Connection():
 
         connection, (client_IP, client_PORT) = socket_server.accept()
 
-        while True:
-            try:
+        try:
 
-                _recieveData = connection.recv(buffer).decode()
+            while True:
+                try:
 
-                if func:
-                    response = func(str(_recieveData))
-                else:
-                    response = cls.Server_RESPONSE_NULL(str(_recieveData))
+                    _recieveData = connection.recv(buffer).decode()
 
-                response = str(response)
-                response = response.encode()
+                    if func:
+                        response = func(str(_recieveData))
+                    else:
+                        response = cls.Server_RESPONSE_NULL(str(_recieveData))
 
-                connection.send(response)
+                    response = str(response)
+                    response = response.encode()
 
-            except:
-                connection.send('Flag Error :: Server-Failed-Queue'.encode())
+                    connection.send(response)
+
+                except:
+                    connection.send('Flag Error :: Server-Failed-Queue'.encode())
+
+        finally:
             
-        connection.close()
-        socket_server.close()
+            connection.close()
+            socket_server.close()
+            return None
             
 
     @classmethod
-    def Server_TCP(cls, port, func, address='', _backlog=3, buffer=4096, listener=1):
+    def Altern_Server(cls, port, func, address='', _backlog=3, buffer=4096, listener=1):
         
         if _backlog == 0 or _backlog > 500:
             return False
@@ -206,7 +284,7 @@ class Connection():
                 s.listen(listener)
                 
             except error as sk_error:
-                cls.Server_TCP(port, func, _backlog=(_backlog-1))
+                cls.Server_Altern(port, func, _backlog=(_backlog-1))
 
             connection, client_address = s.accept()
 
@@ -231,7 +309,7 @@ class Connection():
         return True
 
     @classmethod
-    def Client_Queue(cls, address, command, buffer=4096):
+    def Altern_Connection(cls, address, command, buffer=4096):
         
         try:
             s = socket()
