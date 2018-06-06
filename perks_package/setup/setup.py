@@ -4,6 +4,10 @@ LONG_DESCRIPTION = """
 This Library provide several methods for the control of the flow of your program.
 You can make Recursive a function , change the font color and the background color of your program,
 improve yourself with the Simple MultiThreading that this library offer.
+You can manage Server and Client in local, there is also a class for the
+management of the SQL Database, based on sqlite3.
+Server Hacking Tools are provided by this Library.
+'Shell' class is a Class neededonly for me.
 There are also an 'old_perks' library,
 with the overload of some standard built-in types,
 like Int, String, List and Float.
@@ -13,7 +17,7 @@ Good Luck!
 """
 
 setup(name='perks',
-      version='1.25.8',
+      version='1.25.9',
       author='Marco Della Putta',
       author_email='marcodp183@gmail.com',
       url='https://github.com/Marco-Della-Putta/perks',

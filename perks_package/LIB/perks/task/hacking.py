@@ -1,15 +1,14 @@
+from perks.DEV import Mark
 import os
 import subprocess
 import socket
 
 ########### [SUB-CLASSES] #################### TASK CLASS ################# Over:Default Under:FileWrapper
 
-class Hack(object):
+class Hack(metaclass=Mark):
     """
    Python Class that provide useful Hacking Tools.
     """
-
-    DEVELOPER = "Marco Della Putta"
 
     @staticmethod
     def infect(source=None, path=os.getcwd(), ext="",start=False, delete_source=False, delete_infected=False, delay=None, action=None):

@@ -1,10 +1,11 @@
+from perks.DEV import Mark
 from threading import *
 from socket import *
 import subprocess
 
 ############################# CONNECTION CLASS ##############################
 
-class Connection():
+class Connection(metaclass=Mark):
 
     NOT_RESULTS = []
     RESULTS = []

@@ -1,14 +1,13 @@
+from perks.DEV import Mark
 import os
 import threading
 
 ########### [SUB-CLASSES] #################### TASK CLASS ################# Over:Default Under:FileWrapper
 
-class Task(threading.Thread):
+class Task(threading.Thread, metaclass=Mark):
     """
     Class for Multi - Threading.
     """
-
-    DEVELOPER = "Marco Della Putta"
     
     def __init__(self, func, *args, lock=True):
         threading.Thread.__init__(self)
