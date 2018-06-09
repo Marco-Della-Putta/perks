@@ -1,0 +1,9 @@
+Update [1.26.0]
+
+Added local_ip method to the connection & to the hacking modules.
+Added 'get_ip' to the Hack class.
+Added a module called 'baselog', only for my PC.
+
+Bugs fixed.
+
+-- END UPDATE [1.26.0] --

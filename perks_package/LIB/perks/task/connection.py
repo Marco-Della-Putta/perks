@@ -63,6 +63,42 @@ class Connection(metaclass=Mark):
         _thread.join()
         return None
 
+    def local_ip(ipv6=False):
+        import subprocess
+        if ipv6:
+            _data = subprocess.run('ipconfig', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            _data = str(_data.stdout) + str(_data.stderr)
+            _data = _data.replace('\\n','\n').replace('\\t', '\t').replace('\\r','\r').replace('\\\\', '\\')
+
+            for pos, val in enumerate(_data.split()):
+                if val.lower().startswith('ipv6'):
+                    for vax in _data.split()[pos:]:
+                        if ':' in vax and (not vax.strip() == ':'):
+                            return vax
+            else:
+                return False
+
+        else:
+            _data = subprocess.run('ipconfig', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            _data = str(_data.stdout) + str(_data.stderr)
+            _data = _data.replace('\\n','\n').replace('\\t', '\t').replace('\\r','\r').replace('\\\\', '\\')
+
+            for pos, val in enumerate(_data.split()):
+                if val.lower().startswith('ipv4'):
+                    for vax in _data.split()[pos:]:
+                        if vax.startswith('1'):
+                            return vax
+            else:
+                return False
+
+    @classmethod
+    def get_ip():
+        try:
+            return str(gethostbyname(gethostname()))
+
+        except:
+            return False
+
     @classmethod
     def Scan(cls, Host, Port, complete_result=False):
         

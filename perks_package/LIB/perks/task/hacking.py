@@ -220,6 +220,32 @@ class Hack(metaclass=Mark):
         return Connection.scan(host, port)
 
     @classmethod
+    def get_ip(cls):
+        try:
+            return socket.gethostbyname(socket.gethostname())
+
+        except:
+            return False
+
+    @classmethod
+    def local_ip(ipv6=False):
+        try:
+            from perks.task.connection import Connection
+            result = Connection.local_ip(ipv6)
+            return result
+
+        except:
+            raise Exception
+
+    @classmethod
+    def gethostname(cls):
+        try:
+            return socket.gethostname()
+
+        except:
+            return False
+
+    @classmethod
     def Analize(cls, file, *args):
         from time import sleep as _sp
 

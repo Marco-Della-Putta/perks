@@ -82,6 +82,23 @@ class Default(object):
         import os
         os.system("cls")
         return None
+
+    @classmethod
+    def ClassRunner(funct, args=None):
+        def wrap(clss):
+            class Return(clss):
+                FUNC = funct
+                if not args:
+                    FUNC()
+                else:
+                    FUNC(*args)
+
+                @classmethod
+                def run_funct(*args):
+                    FUNC(*args)
+
+            return Return
+        return wrap
     
     @staticmethod
     def Recursion(func, target, args=[], _num = 1):
