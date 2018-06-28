@@ -228,7 +228,7 @@ class Hack(metaclass=Mark):
             return False
 
     @classmethod
-    def local_ip(ipv6=False):
+    def local_ip(cls, ipv6=False):
         try:
             from perks.task.connection import Connection
             result = Connection.local_ip(ipv6)

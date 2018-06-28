@@ -55,6 +55,8 @@ class Shell(object):
 
         filesearch = re.compile("search ([a-zA-Z0-9\-_]+[.][a-zA-Z]{1,6})")
         partialsearch = re.compile("search ([a-zA-Z0-9\\\-_]{1,20})")
+
+        insearch = re.compile("search ([a-zA-Z0-9\\\-_]{1,20}) -p")
         extsearch = re.compile("search ([.][a-zA-Z]{1,6})")
 
         extdel = re.compile("delete ([.][a-zA-Z]{1,6})")
@@ -141,36 +143,31 @@ class Shell(object):
             elif re.fullmatch(memory, command.lower()):
                 result = re.fullmatch(memory, command)
                 print("analyzing memory ...")
-                x = System.Memory(result.group(1))
-                for y in x:
+                for y in System.Memory(result.group(1))
                     print(y)
 
             elif re.fullmatch(filesearch, command.lower()):
                 result = re.fullmatch(filesearch, command)
                 print("searching file ...")
-                x = System.Filesearch(result.group(1))
-                for y in x:
+                for y in System.Filesearch(result.group(1)):
                     print(y)
 
             elif re.fullmatch(filedel, command.lower()):
                 result = re.fullmatch(filedel, command)
                 print("deleting file ...")
-                x = System.FileDelete(result.group(1))
-                for y in x:
+                for y in System.FileDelete(result.group(1)):
                     print(y)
 
             elif re.fullmatch(extdel, command.lower()):
                 result = re.fullmatch(extdel, command)
                 print("deleting extension ...")
-                x = System.Extdelete(result.group(1))
-                for y in x:
+                for y in System.Extdelete(result.group(1)):
                     print(y)
 
             elif re.fullmatch(extsearch, command.lower()):
                 result = re.fullmatch(extsearch, command)
                 print("searching extension ...")
-                x = System.Extsearch(result.group(1))
-                for y in x:
+                for y in System.Extsearch(result.group(1)):
                     print(y)
 
             elif re.fullmatch(createdd, command.lower()):
@@ -201,6 +198,12 @@ class Shell(object):
                 for y in x:
                     print(y)
 
+            elif re.fullmatch(insearch, command.lower()):
+                result = re.fullmatch(partialsearch, command)
+                print("searching partial file ...")
+                for y in System.InSearch(result.group(1)):
+                    print(y)
+
             elif re.fullmatch(helpp, command.lower()):
                 print(" ## HELP ##\n")
                 print(" help : show this section")
@@ -215,11 +218,12 @@ class Shell(object):
                 print(" read [file | C\\path\\file] -d : read a file on the desktop")
 
                 print(" search [ext | file] : search extension or files")
-                print(" delete [ext | file] : delete extension or files")
+                print(" search [ext | file] -p : search files that contains in the name the word you choose")
 
                 print(" memory [value] : return the file over this memory [MB]")
                 print(" open [url] : open an url in your predefinied browser")
 
+                print(" delete [ext | file] : delete extension or files")
                 print(" space [-start/-stop] : active or deactive spaces between lines")
                 
                 print(" cls : clear the screen <Remove the license printed at the top of the screen>")

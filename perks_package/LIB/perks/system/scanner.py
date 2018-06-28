@@ -120,6 +120,18 @@ class System:
         return None
 
     @classmethod
+    def PInSearch(cls, __part__, _path_="C:"):
+        import os
+        _path_ = _path_ + "\\"
+        _result = []
+        for RootDir, _Fldrs_, _PartSearch_ in os.walk(_path_):
+            for __files__ in _PartSearch_:
+                if __part__ in __files__:
+                    __pth = RootDir + "\\" + __files__
+                    yield __pth
+        return None
+
+    @classmethod
     def Extdelete(cls, _ext_, _path_="C:"):
         """
          Try to delete all the files with the specified extension and return a list of it.

@@ -1,0 +1,6 @@
+Update [1.26.1]
+
+Bug fixed in the Shell class.
+Added a new feature in the 'system' module.
+
+-- END UPDATE [1.26.1] --
